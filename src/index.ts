@@ -2,7 +2,7 @@
 import * as d3 from 'd3';
 
 
-export function initAstroViz(divId: string): d3.Selection<SVGSVGElement, unknown, HTMLElement, any> {
+export function initAstroViz(divId: string, houseData: string[]): d3.Selection<SVGSVGElement, unknown, HTMLElement, any> {
     const svgWidth = 550;
     const svgHeight = 410;
     const houseWidth = 131.25;
@@ -34,7 +34,7 @@ export function initAstroViz(divId: string): d3.Selection<SVGSVGElement, unknown
         .append("tspan").text("Rasi")
 
     // Calculate x and y positions for houses with margins
-    const houseData = [
+    const _houseDataBox = [
         { x: 0, y: 0 },
         { x: (1 * houseWidth) + margin, y: 0 },
         { x: (2 * houseWidth) + 2 * margin, y: 0 },
@@ -51,7 +51,7 @@ export function initAstroViz(divId: string): d3.Selection<SVGSVGElement, unknown
 
     // Houses
     svg.selectAll("rect.house")
-        .data(houseData)
+        .data(_houseDataBox)
         .enter().append("rect")
         .attr("x", d => d.x)
         .attr("y", d => d.y)
@@ -60,12 +60,11 @@ export function initAstroViz(divId: string): d3.Selection<SVGSVGElement, unknown
         .attr("class", "house")
 
     // House labels
-    const houseLabels = ["", ["Su", "Ke"], "Ju", "Ma", "Asc", "Mo", "Sa", "Ra", "Ve", "Me"];
     svg.selectAll("text.houseText")
-        .data(houseLabels)
+        .data(houseData)
         .enter().append("text")
-        .attr("x", (d, i) => houseData[i].x + 0.5 * houseWidth)
-        .attr("y", (d, i) => houseData[i].y + 0.5 * houseHeight)
+        .attr("x", (d, i) => _houseDataBox[i].x + 0.5 * houseWidth)
+        .attr("y", (d, i) => _houseDataBox[i].y + 0.5 * houseHeight)
         .attr("class", "houseText")
         .text(d => d as string);
 
