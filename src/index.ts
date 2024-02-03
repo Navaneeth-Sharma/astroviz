@@ -9,6 +9,20 @@ export function initAstroViz(divId: string, houseData: string[]): d3.Selection<S
     const houseHeight = 96.25;
     const margin = 8;
 
+    const HouseArrayMap: { [key: number]: number } = {
+        0: 1,
+        1: 2,
+        2: 3,
+        3: 5,
+        4: 7,
+        5: 11,
+        6: 10,
+        7: 9,
+        8: 8,
+        9: 6,
+        10: 4,
+        11: 0
+    }
 
     // Select the div with id "southChart"
     const chartContainer = d3.select(divId);
@@ -60,13 +74,26 @@ export function initAstroViz(divId: string, houseData: string[]): d3.Selection<S
         .attr("class", "house")
 
     // House labels
-    svg.selectAll("text.houseText")
-        .data(houseData)
-        .enter().append("text")
-        .attr("x", (d, i) => _houseDataBox[i].x + 0.5 * houseWidth)
-        .attr("y", (d, i) => _houseDataBox[i].y + 0.5 * houseHeight)
-        .attr("class", "houseText")
-        .text(d => d as string);
+    const isValid = houseData.length <= 12
+    if (!isValid) {
+        throw new Error("The data length must be 12");
+    }
+
+    houseData.forEach((label, i: number) => {
+        let val: number = HouseArrayMap[i]
+        svg.append("text")
+            .attr("x", _houseDataBox[val].x + 0.5 * houseWidth)
+            .attr("y", _houseDataBox[val].y + 0.5 * houseHeight)
+            .attr("class", "houseText")
+            .text(label as string);
+    });
+    // svg.selectAll("text.houseText")
+    //     .data(houseData)
+    //     .enter().append("text")
+    //     .attr("x", (d, i) => _houseDataBox[i].x + 0.5 * houseWidth)
+    //     .attr("y", (d, i) => _houseDataBox[i].y + 0.5 * houseHeight)
+    //     .attr("class", "houseText")
+    //     .text(d => d as string);
 
 
     return svg;
